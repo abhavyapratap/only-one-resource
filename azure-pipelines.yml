@@ -1,0 +1,38 @@
+trigger:
+- main
+
+pool: Project-Pool
+
+steps:
+- task: NodeTool@0
+  displayName: Node Intaller
+  inputs:
+    versionSource: 'spec'
+    versionSpec: '18.x'
+
+- task: Npm@1
+  displayName: Npm install
+  inputs:
+    command: 'install'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'run build'
+
+- task: CopyFilesOverSSH@0
+  displayName: copy build folder from local to remote
+  inputs:
+    sshEndpoint: 'frontend-vm'
+    sourceFolder: 'build'
+    contents: '**'
+    targetFolder: '/home/frontend'
+    readyTimeout: '20000'
+
+- task: SSH@0
+  displayName: copy build folder to /var/www/html
+  inputs:
+    sshEndpoint: 'frontend-vm'
+    runOptions: 'commands'
+    commands: 'sudo cp -r /home/frontend/* /var/www/html'
+    readyTimeout: '20000'
