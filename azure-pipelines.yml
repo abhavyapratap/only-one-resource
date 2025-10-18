@@ -23,7 +23,7 @@ steps:
 - task: CopyFilesOverSSH@0
   displayName: copy build folder from local to remote
   inputs:
-    sshEndpoint: 'frontend-vm'
+    sshEndpoint: 'ssh'
     sourceFolder: 'build'
     contents: '**'
     targetFolder: '/home/frontend'
@@ -32,7 +32,7 @@ steps:
 - task: SSH@0
   displayName: copy build folder to /var/www/html
   inputs:
-    sshEndpoint: 'frontend-vm'
+    sshEndpoint: 'ssh'
     runOptions: 'commands'
     commands: 'sudo cp -r /home/frontend/* /var/www/html'
     readyTimeout: '20000'
